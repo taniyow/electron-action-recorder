@@ -15,7 +15,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "check-abi": "npx electron -v && npx electron -a",
+    "rebuild": "npx electron-rebuild -f -t prod,optional,dev -w robotjs"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
