@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function App() {
   const [recording, setRecording] = useState(false);
@@ -24,7 +24,7 @@ export default function App() {
     setTimeout(() => {
       setReplaying(false);
       setStatus("Stopped recording mouse actions...");
-    }, (window.electronAPI.actions || 0));
+    }, window.electronAPI.actions || 0);
   };
 
   const toggleRecording = () => {
@@ -34,6 +34,31 @@ export default function App() {
       startRecording();
     }
   };
+
+  useEffect(() => {
+    const handleStartShortcut = () => {
+      startRecording();
+    };
+
+    const handleStopShortcut = () => {
+      stopRecording();
+    };
+
+    const handleReplayShortcut = () => {
+      replayActions();
+    };
+
+    window.electronAPI.onStartShortcut(handleStartShortcut);
+    window.electronAPI.onStopShortcut(handleStopShortcut);
+    window.electronAPI.onReplayShortcut(handleReplayShortcut);
+
+    return () => {
+      // Clean up the listeners
+      window.electronAPI.onStartShortcut(null);
+      window.electronAPI.onStopShortcut(null);
+      window.electronAPI.onReplayShortcut(null);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen max-h-full bg-zinc-950 p-4">
