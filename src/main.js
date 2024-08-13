@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const path = require('node:path');
 const robot = require("robotjs");
 
@@ -56,6 +56,19 @@ const createWindow = () => {
       }, index * 100);
     });
   });
+
+  // Register keyboard shortcut listeners.
+  globalShortcut.register("Ctrl+R", () => {
+    mainWindow.webContents.send("start-shortcut");
+  });
+
+  globalShortcut.register("Ctrl+S", () => {
+    mainWindow.webContents.send("stop-shortcut");
+  });
+
+  globalShortcut.register("Ctrl+F", () => {
+    mainWindow.webContents.send("replay-shortcut");
+  });
 };
 
 // This method will be called when Electron has finished
@@ -71,6 +84,11 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+});
+
+// Cleanup global shortcuts when the app will quit.
+app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
