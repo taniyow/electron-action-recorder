@@ -4,8 +4,9 @@ A simple Electron desktop application that allows a user to record actions such 
 
 ## Quickstart
 
-- `npm install` to install all the dependencies.
-- `npm start` to start the development server.
+1. `npm install` to install all the dependencies.
+2. `npm rebuild` to rebuild robotjs native modules.
+3. `npm start` to start the development server.
 
 ### TAKE NOTE
 
