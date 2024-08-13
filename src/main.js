@@ -1,5 +1,12 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
+const robot = require("robotjs");
+
+// Store mouse actions
+let actions = [];
+let recordingInterval = null;
+
+console.log("dirname:", __dirname);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -12,7 +19,11 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      // preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      preload: path.join(__dirname, "../renderer/main_window/preload.js"),
+      nodeIntegration: true,
+      contextIsolation: true,
+      enableRemoteModule: false,
     },
     autoHideMenuBar: true,
   });
@@ -22,6 +33,29 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  // IPC Event Handlers
+  ipcMain.on("start-recording", () => {
+    actions = [];
+    recordingInterval = setInterval(() => {
+      const mousePos = robot.getMousePos();
+      actions.push({ type: "move", x: mousePos.x, y: mousePos.y });
+    }, 100);
+  });
+
+  ipcMain.on("stop-recording", () => {
+    clearInterval(recordingInterval);
+  });
+
+  ipcMain.on("replay-actions", () => {
+    actions.forEach((action, index) => {
+      setTimeout(() => {
+        if (action.type === "move") {
+          robot.moveMouse(action.x, action.y);
+        }
+      }, index * 100);
+    });
+  });
 };
 
 // This method will be called when Electron has finished
