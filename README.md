@@ -6,3 +6,7 @@ A simple Electron desktop application that allows a user to record actions such 
 
 - `npm install` to install all the dependencies.
 - `npm start` to start the development server.
+
+### TAKE NOTE
+
+- If encountered issues, try running `npm run rebuild` first to rebuild the robotjs native modules, then run `npm start`.
