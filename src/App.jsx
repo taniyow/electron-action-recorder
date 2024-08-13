@@ -61,8 +61,14 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen max-h-full bg-zinc-950 p-4">
+    <div className="min-h-screen max-h-full bg-zinc-950 p-4 relative">
       <div className="font-bold text-white mb-4">Mouse Action Recorder</div>
+      <div className="text-sm text-white mb-4 absolute top-0 right-0 p-4">
+        <div>Shortcut keys:</div>
+        <div>Ctrl + R : Start Recording</div>
+        <div>Ctrl + S : Stop Recording</div>
+        <div>Ctrl + F : Replay Recording</div>
+      </div>
       <button
         onClick={toggleRecording}
         disabled={replaying}
